@@ -1,3 +1,4 @@
+
 require_relative "../config/environment.rb"
 
 class Student
@@ -48,18 +49,15 @@ class Student
     end 
   end 
 
-  def self.create(name:, grade:)
-    student = student.new("sally", "10th")
+  def self.create(name, grade)
+    student = Student.new(name, grade)
     student.save
     student
   end
 
   def self.new_from_db(row)
-    new_student = self.new  # self.new is the same as running Song.new
-    new_student.id = row[0]
-    new_student.name =  row[1]
-    new_student.grade = row[2]
-    new_student  # return the newly created instance
+    student = Student.new(row[1], row[2], row[0])
+    student
   end
 
   def self.find_by_name(name)
@@ -69,10 +67,10 @@ class Student
       WHERE name = ?
       LIMIT 1
     SQL
- 
-    DB[:conn].execute(sql, name).map do |row|
+
+    DB[:conn].execute(sql,name).map {|row|
       self.new_from_db(row)
-    end
+      }.first
   end
 
 end
